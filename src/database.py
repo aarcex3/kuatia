@@ -11,7 +11,7 @@ from litestar.exceptions import ClientException
 from litestar.status_codes import HTTP_409_CONFLICT
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
-from sqlalchemy.orm import declarative_base
+from sqlalchemy.orm import DeclarativeBase
 
 from src.config import get_settings
 
@@ -60,11 +60,7 @@ async def provide_session(state: State) -> AsyncGenerator[AsyncSession, None]:
             ) from exc
 
 
-Base = declarative_base()
-
-
-class BaseDBModel(Base):
-    __abstract__ = True
+class Base(DeclarativeBase):
 
     @property
     def as_dict(self):

@@ -1,47 +1,48 @@
-from sqlalchemy import Boolean, Column, Date, Float, ForeignKey, Index, Integer, String
-from sqlalchemy.orm import relationship
+from datetime import date
 
-from src.database import BaseDBModel
+from sqlalchemy import Index
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from src.database import Base
+from src.issuer.models import Issuer
 
 
-class Invoice(BaseDBModel):
-    __tablename__ = "invoice"
+class InvoiceDetail(Base):
+    __tablename__ = "invoice_details"
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    issuer_id = Column(Integer, ForeignKey("issuer.id"))
-    stamping = Column(Integer)
-    date_issue = Column(Date)
-    date_expiration = Column(Date)
-    is_expired = Column(Boolean)
-    detail_id = Column(Integer, ForeignKey("invoice_detail.id"))
-    ruc = Column(Integer)
-    name = Column(String)
-    vat_five = Column(Float)
-    vat_ten = Column(Float)
-    subtotal = Column(Float)
-    total = Column(Float)
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    product_name: Mapped[str]
+    quantity: Mapped[int]
+    unit_price: Mapped[float]
+    sale_price_five: Mapped[float]
+    sale_price_ten: Mapped[float]
 
-    issuer = relationship("Issuer")
-    detail = relationship("InvoiceDetail")
+    invoices: Mapped["Invoice"] = relationship("Invoice", back_populates="detail")
+    __table_args__ = (Index("idx_product_name", "product_name"),)
+
+
+class Invoice(Base):
+    __tablename__ = "invoices"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    stamping: Mapped[int]
+    date_issue: Mapped[date]
+    date_expiration: Mapped[date]
+    is_expired: Mapped[bool]
+    ruc: Mapped[int]
+    name: Mapped[str]
+    vat_five: Mapped[float]
+    vat_ten: Mapped[float]
+    subtotal: Mapped[float]
+    total: Mapped[float]
+
+    issuer: Mapped[Issuer] = relationship("Issuer", back_populates="invoices")
+    detail: Mapped[InvoiceDetail] = relationship(
+        "InvoiceDetail", back_populates="invoices"
+    )
 
     __table_args__ = (
         Index("idx_invoice_stamping", "stamping"),
-        Index("idx_user_id", "user_id"),
-        Index("idx_issuer_id", "issuer_id"),
-        Index("idx_detail_id", "detail_id"),
         Index("idx_invoice_date_issue", "date_issue"),
         Index("idx_invoice_ruc", "ruc"),
     )
-
-
-class InvoiceDetail(BaseDBModel):
-    __tablename__ = "invoice_detail"
-
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    product_name = Column(String)
-    quantity = Column(Integer)
-    unit_price = Column(Float)
-    sale_price_five = Column(Float)
-    sale_price_ten = Column(Float)
-
-    __table_args__ = (Index("idx_product_name", "product_name"),)
