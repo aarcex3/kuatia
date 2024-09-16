@@ -3,7 +3,7 @@ import falcon.asgi
 from falcon.asgi import App
 
 from src.database.manager import db
-from src.media import SERIALIZERS
+from src.media_handlers import SERIALIZERS
 from src.resources import InvoiceResource
 
 app: App = falcon.asgi.App()
