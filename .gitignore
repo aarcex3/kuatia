@@ -167,3 +167,8 @@ cython_debug/
 
 # Vscode
 .vscode
+
+
+# SQL
+.sqlite3
+.sqlite

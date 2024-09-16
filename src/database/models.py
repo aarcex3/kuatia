@@ -59,13 +59,12 @@ class Invoice(BaseModel):
     detail = relationship("InvoiceDetail")
 
     __table_args__ = (
-        Index("idx_stamping", "stamping"),
+        Index("idx_invoice_stamping", "stamping"),
         Index("idx_user_id", "user_id"),
         Index("idx_issuer_id", "issuer_id"),
         Index("idx_detail_id", "detail_id"),
-        Index("idx_date_issue", "date_issue"),
-        Index("idx_is_expired", "is_expired"),
-        Index("idx_ruc", "ruc"),
+        Index("idx_invoice_date_issue", "date_issue"),
+        Index("idx_invoice_ruc", "ruc"),
     )
 
 
@@ -89,4 +88,4 @@ class Issuer(BaseModel):
     ruc = Column(Integer, unique=True)
     name = Column(String, unique=True)
 
-    __table_args__ = (Index("idx_name", "name"), Index("idx_ruc", "ruc"))
+    __table_args__ = (Index("idx_issuer_name", "name"), Index("idx_issuer_ruc", "ruc"))
