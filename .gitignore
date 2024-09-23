@@ -172,3 +172,7 @@ cython_debug/
 # SQL
 *.sqlite3
 *.sqlite
+
+# Rest
+*.rest 
+*.http
