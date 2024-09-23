@@ -1,9 +1,7 @@
-from litestar.dto.config import DTOConfig
-from litestar.dto.msgspec_dto import MsgspecDTO
+from advanced_alchemy.extensions.litestar.dto import SQLAlchemyDTO, SQLAlchemyDTOConfig
 
-from src.invoice.schemas import InvoiceSchema
+from src.invoice.models import Invoice
 
 
-class InvoiceDTO(MsgspecDTO):
-    config = DTOConfig(exclude={"id"})
-    model_type = InvoiceSchema
+class InvoiceDTO(SQLAlchemyDTO[Invoice]):
+    config = SQLAlchemyDTOConfig(exclude={"id"})
